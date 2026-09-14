@@ -37,7 +37,7 @@
 - WebAuthControllerTest: 4 теста проходят (Origin, CSRF, cookie-only refresh secret, стабильный CSRF token).
 - Полный backend suite: 47 тестов/инициализаций; 41 успешно, 6 integration suite initialization failures из-за отсутствия Docker/Testcontainers. Это **не** результат успешного интеграционного прогона.
 - Веб `npm install`: аудит 0 уязвимостей при установке зафиксированного lockfile.
-- Реальных входов, AI-запросов с личными данными, публикации и проверки iPhone не выполнялось.
+- Реальных входов, AI-запросов с личными данными и проверки физического iPhone не выполнялось. Предрелизный веб опубликован на `https://api.valerochkagym.tech/`; root/admin/health/SW/offline smoke проверены. Backend rollout пока не выполнен (см. `deploy/SERVER.md`).
 
 ## Ограничения текущей реализации
 
