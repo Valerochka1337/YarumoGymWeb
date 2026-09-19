@@ -4,4 +4,9 @@ coverage/
 playwright-report/
 test-results/
 .cache/
+.env*
+!.env.example
+backend-work/
 *.tsbuildinfo
+releases/
+
