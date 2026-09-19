@@ -30,6 +30,15 @@ async function decode(response: Response) {
 export function currentSession() {
   return session;
 }
+export async function googleAuthConfig(): Promise<{ clientId?: string }> {
+  return decode(
+    await fetch("/v1/web/auth/google/config", {
+      credentials: "same-origin",
+      cache: "no-store",
+      signal: AbortSignal.timeout(20000),
+    }),
+  );
+}
 export async function webAuth(action: string, body?: unknown): Promise<any> {
   return lock("auth", async () => {
     if (!csrf)
