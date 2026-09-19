@@ -1,0 +1,3 @@
+import { describe, expect, it, vi } from "vitest";
+import { WebAuth } from "./webAuth";
+describe("web auth", () => { it("keeps the access token in memory and obtains CSRF before login", async () => { const fetcher=vi.spyOn(globalThis,"fetch").mockResolvedValueOnce(new Response(JSON.stringify({csrfToken:"x"}),{status:200})).mockResolvedValueOnce(new Response(JSON.stringify({accessToken:"token"}),{status:200})); const auth=new WebAuth(); await auth.csrf(); await auth.login({email:"a@b.c",password:"secret"}); expect(auth.token).toBe("token"); expect(localStorage.length).toBe(0); expect(fetcher.mock.calls[1][1]?.headers).toMatchObject({"X-CSRF-Token":"x"}); }); });
