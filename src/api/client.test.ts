@@ -1,0 +1,3 @@
+import { describe, expect, it, vi } from "vitest";
+import { api } from "./client";
+describe("trial API", () => { it("sends immutable pending request bytes after auth", async () => { const fetcher=vi.spyOn(globalThis,"fetch").mockResolvedValue(new Response(JSON.stringify({routineId:"r",workoutId:"w"}),{status:200})); const body=JSON.stringify({operationId:"00000000-0000-4000-8000-000000000000",startedAt:1,finishedAt:2,completedSets:[]}); await api.save("a".repeat(43),body,"memory-token"); expect(fetcher.mock.calls[0][1]?.body).toBe(body); expect(fetcher.mock.calls[0][1]?.headers).toMatchObject({Authorization:"Bearer memory-token"}); }); });
