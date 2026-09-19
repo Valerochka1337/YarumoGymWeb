@@ -1,8 +1,15 @@
 import { test, expect } from "@playwright/test";
 test.describe("service-worker rollout scaffolding", () => {
+  test.beforeEach(({ browserName }) => {
+    test.skip(
+      browserName === "webkit",
+      "Playwright WebKit does not expose service workers; physical iPhone acceptance remains required.",
+    );
+  });
+
   test("controlled worker leaves token and API routes on the network", async ({ page }) => {
     let previewRequests = 0;
-    await page.route("**/v1/**", route => {
+    await page.route("**/v1/routine-shares/preview/**", route => {
       previewRequests += 1;
       return route.fulfill({ status: 404, contentType: "application/json", body: '{"code":"share_unavailable"}' });
     });

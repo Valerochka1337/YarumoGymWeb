@@ -1,18 +1,45 @@
-# Yarumo browser trial
+# Yarumo coach Web
 
-Мобильный web-интерфейс публичной пробной тренировки. Структура программы неизменяема;
-до явного входа результаты остаются только в локальном черновике браузера.
+React / TypeScript / Vite PWA для существующего Yarumo backend. Основной интерфейс сохраняет
+локальный дневник, календарь и анализ; маршрут `/r/{token}` проводит неизменяемую пробную
+тренировку по публичной ссылке. До явного входа её результаты остаются только в локальном
+черновике браузера.
 
-```bash
+## Запуск
+
+Требуется Node.js 22.12+ (проверено на 24.13.1).
+
+```sh
 npm ci
+npm run dev
+```
+
+Приложение открывается по адресу `http://127.0.0.1:5173`. Для общих аккаунтов запустите
+существующий backend и настройте `API_PROXY_TARGET`. Защищённые cookie требуют HTTPS;
+не отключайте `Secure` ради локального теста.
+
+В production все API-запросы идут на `/v1` своего origin. Секреты и AI-ключи в сборку не
+включаются.
+
+## Проверки
+
+```sh
 npm run typecheck
 npm test
 npm run build
+npx playwright install chromium firefox webkit
 npm run test:e2e
 ```
 
-Production размещается на `https://app.valerochkagym.tech`. Репозиторий проверяет каждый
-PR и `main`; неизменяемый архив `dist/` собирает и устанавливает защищённый production job
-репозитория backend вместе с конфигурацией `infra/nginx.conf`. Первичная установка требует
-A-запись `app.valerochkagym.tech` на production VPS; installer атомарно переключает release,
-получает отдельный сертификат Certbot при его отсутствии и проверяет локальный HTTPS listener.
+Playwright проверяет основной дневник и пробную тренировку, включая мобильный viewport и
+исключение `/r` и `/v1` из Service Worker cache. Это не заменяет приёмку на физическом iPhone.
+
+## Размещение
+
+Production размещается на существующем `https://api.valerochkagym.tech/`. Backend CI собирает
+проверенный `dist/`, атомарно переключает `/srv/yarumo-web/current` и обновляет маршруты Nginx.
+Отдельный домен, DNS-запись и сертификат для Web не требуются. Backend использует
+`WEB_ORIGIN=https://api.valerochkagym.tech`.
+
+Подробности первоначального Web-релиза и отката сохранены в [deploy/SERVER.md](deploy/SERVER.md).
+

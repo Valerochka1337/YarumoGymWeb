@@ -1,10 +1,28 @@
-import { StrictMode } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
 import { TrialApp } from "./app/TrialApp";
+import { ErrorBoundary } from "./ErrorBoundary";
+import "./theme.css";
 import "./styles.css";
 
-createRoot(document.getElementById("root")!).render(<StrictMode><TrialApp /></StrictMode>);
+const isTrialRoute = location.pathname === "/r" || location.pathname.startsWith("/r/");
 
-window.addEventListener("load", () => {
-  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
-});
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    {isTrialRoute ? (
+      <TrialApp />
+    ) : (
+      <ErrorBoundary>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ErrorBoundary>
+    )}
+  </React.StrictMode>,
+);
+
+document.documentElement.dataset.theme =
+  localStorage.getItem("theme") ?? "system";
+
