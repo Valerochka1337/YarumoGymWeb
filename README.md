@@ -19,7 +19,9 @@ npm run dev
 не отключайте `Secure` ради локального теста.
 
 В production все API-запросы идут на `/v1` своего origin. Секреты и AI-ключи в сборку не
-включаются.
+включаются. Публичный Google Web client ID загружается с
+`/v1/web/auth/google/config`, поэтому production-сборка использует ту же OAuth-конфигурацию,
+что и backend; `VITE_GOOGLE_CLIENT_ID` остаётся только необязательным локальным fallback.
 
 ## Проверки
 
@@ -42,4 +44,3 @@ Production размещается на существующем `https://api.val
 `WEB_ORIGIN=https://api.valerochkagym.tech`.
 
 Подробности первоначального Web-релиза и отката сохранены в [deploy/SERVER.md](deploy/SERVER.md).
-

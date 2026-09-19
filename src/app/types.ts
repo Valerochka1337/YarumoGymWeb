@@ -1,11 +1,75 @@
 export type ExerciseType = "STRENGTH" | "TIMED" | "CARDIO";
-export type PreviewSet = { weightKg: number | null; reps: number | null; durationSec: number | null; speedKmh: number | null; inclinePct: number | null };
-export type PreviewExercise = { exerciseKey: string; name: string; type: ExerciseType; sets: PreviewSet[]; restSeconds: number };
-export type Preview = { title: string; estimatedDurationSeconds: number; exercises: PreviewExercise[] };
-export type Actual = Omit<TrialSet, "exerciseIndex" | "setIndex" | "completedAt">;
-export type TrialSet = { exerciseIndex: number; setIndex: number; completedAt: number; weightKg: number | null; reps: number | null; durationSec: number | null; speedKmh: number | null; inclinePct: number | null };
-export type PendingSaveRequest = { operationId: string; startedAt: number; finishedAt: number; completedSets: TrialSet[] };
-export type SetState = { completed: boolean; completedAt?: number; actual: Actual };
-export type TrialPhase = "preview" | "active" | "summary" | "auth" | "saving" | "saved";
-export type TrialState = { token: string; preview: Preview; operationId: string; startedAt: number; finishedAt?: number; phase: TrialPhase; restDeadlineAt?: number; exercises: SetState[][]; pendingSaveRequest?: string; saved?: { routineId: string; workoutId: string }; error?: string; revoked?: boolean };
-export type TrialDraftV1 = Pick<TrialState, "token" | "preview" | "operationId" | "startedAt" | "finishedAt" | "phase" | "restDeadlineAt" | "exercises" | "pendingSaveRequest" | "saved"> & { version: 1; previewFingerprint: string };
+export type PreviewSet = {
+  weightKg: number | null;
+  reps: number | null;
+  durationSec: number | null;
+  speedKmh: number | null;
+  inclinePct: number | null;
+};
+export type PreviewExercise = {
+  exerciseKey: string;
+  name: string;
+  type: ExerciseType;
+  sets: PreviewSet[];
+  restSeconds: number;
+};
+export type Preview = {
+  title: string;
+  estimatedDurationSeconds: number;
+  exercises: PreviewExercise[];
+};
+export type Actual = Omit<
+  TrialSet,
+  "exerciseIndex" | "setIndex" | "completedAt"
+>;
+export type TrialSet = {
+  exerciseIndex: number;
+  setIndex: number;
+  completedAt: number;
+  weightKg: number | null;
+  reps: number | null;
+  durationSec: number | null;
+  speedKmh: number | null;
+  inclinePct: number | null;
+};
+export type PendingSaveRequest = {
+  operationId: string;
+  startedAt: number;
+  finishedAt: number;
+  completedSets: TrialSet[];
+};
+export type SetState = {
+  completed: boolean;
+  completedAt?: number;
+  actual: Actual;
+};
+export type SetPosition = { exerciseIndex: number; setIndex: number };
+export type TrialPhase =
+  "preview" | "active" | "summary" | "auth" | "saving" | "saved";
+export type TrialState = {
+  token: string;
+  preview: Preview;
+  operationId: string;
+  startedAt: number;
+  finishedAt?: number;
+  phase: TrialPhase;
+  restDeadlineAt?: number;
+  exercises: SetState[][];
+  pendingSaveRequest?: string;
+  saved?: { routineId: string; workoutId: string };
+  error?: string;
+  revoked?: boolean;
+};
+export type TrialDraftV1 = Pick<
+  TrialState,
+  | "token"
+  | "preview"
+  | "operationId"
+  | "startedAt"
+  | "finishedAt"
+  | "phase"
+  | "restDeadlineAt"
+  | "exercises"
+  | "pendingSaveRequest"
+  | "saved"
+> & { version: 1; previewFingerprint: string };

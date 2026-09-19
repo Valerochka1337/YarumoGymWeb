@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { webAuth } from "../core/auth";
+import { googleAuthConfig, webAuth } from "../core/auth";
 import { db } from "../core/db";
 import { useApp } from "../ui";
 let script: Promise<void> | undefined;
@@ -11,8 +11,7 @@ export function GoogleSignIn({
   const host = useRef<HTMLDivElement>(null),
     { run, owner } = useApp(),
     [ready, setReady] = useState(false);
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  if (!clientId) return null;
+  const bundledClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   return (
     <div>
       <button
@@ -33,6 +32,9 @@ export function GoogleSignIn({
                 document.head.append(s);
               });
             await script;
+            const clientId =
+              bundledClientId || (await googleAuthConfig()).clientId;
+            if (!clientId) throw new Error("Google-вход пока не настроен");
             const { nonce } = await webAuth("google/nonce");
             const google = (window as any).google;
             google.accounts.id.initialize({
