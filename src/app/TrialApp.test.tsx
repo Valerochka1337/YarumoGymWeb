@@ -1,11 +1,13 @@
-import { render, screen } from "@testing-library/react";
-import { beforeEach, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { TrialApp } from "./TrialApp";
 
 beforeEach(() => {
+  localStorage.clear();
   history.replaceState(null, "", "/r/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
   vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ title:"Пресс",estimatedDurationSeconds:60,exercises:[] }), { status:200 })));
 });
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 it("renders immutable preview and defers auth until saving", async () => {
   render(<TrialApp />);
   expect(await screen.findByRole("button", { name:"Начать тренировку" })).toBeEnabled();
