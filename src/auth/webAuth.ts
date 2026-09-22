@@ -13,12 +13,6 @@ export class WebAuth {
       await this.request<Csrf>("/v1/web/auth/csrf", { method: "GET" })
     ).csrfToken;
   }
-  async register(credentials: Credentials) {
-    await this.request("/v1/web/auth/register", {
-      method: "POST",
-      body: JSON.stringify(credentials),
-    });
-  }
   async verify(email: string, code: string) {
     await this.request("/v1/web/auth/verify", {
       method: "POST",

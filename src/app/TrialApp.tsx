@@ -184,13 +184,6 @@ export function TrialApp() {
       });
       await save();
     });
-  const register = () =>
-    runAuth(async () => {
-      await auth.current.csrf();
-      await auth.current.register({ email, password });
-      setCode("");
-      setAuthMode("verify");
-    });
   const verify = () =>
     runAuth(async () => {
       await auth.current.verify(email, code);
@@ -296,7 +289,6 @@ export function TrialApp() {
           onPasswordChange={setPassword}
           onCodeChange={setCode}
           onLogin={login}
-          onRegister={register}
           onVerify={verify}
           onGoogleSuccess={save}
           onGoogleError={(message) => dispatch({ type: "authError", message })}

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowLeft, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { WebAuth } from "../auth/webAuth";
 
-export type AuthMode = "login" | "register" | "verify";
+export type AuthMode = "login" | "verify";
 
 type Props = {
   auth: WebAuth;
@@ -17,7 +17,6 @@ type Props = {
   onPasswordChange: (value: string) => void;
   onCodeChange: (value: string) => void;
   onLogin: () => Promise<void>;
-  onRegister: () => Promise<void>;
   onVerify: () => Promise<void>;
   onGoogleSuccess: () => Promise<void>;
   onGoogleError: (message: string) => void;
@@ -166,7 +165,6 @@ export function TrialAuth({
   onPasswordChange,
   onCodeChange,
   onLogin,
-  onRegister,
   onVerify,
   onGoogleSuccess,
   onGoogleError,
@@ -191,24 +189,13 @@ export function TrialAuth({
     setAttempted(true);
     if (!emailValid || (mode === "verify" ? !codeValid : !passwordValid))
       return;
-    void (mode === "login"
-      ? onLogin()
-      : mode === "register"
-        ? onRegister()
-        : onVerify());
+    void (mode === "login" ? onLogin() : onVerify());
   };
-  const title =
-    mode === "login"
-      ? "С возвращением!"
-      : mode === "register"
-        ? "Создать аккаунт"
-        : "Проверьте почту";
+  const title = mode === "login" ? "С возвращением!" : "Проверьте почту";
   const copy =
     mode === "login"
       ? "Войдите, чтобы сохранить тренировку и продолжить в Yarumo."
-      : mode === "register"
-        ? "Сохраните тренировку и возвращайтесь к ней на любом устройстве."
-        : "Введите 8 цифр из письма. Код действует 10 минут.";
+      : "Введите 8 цифр из письма. Код действует 10 минут.";
 
   return (
     <section className="trial-auth" aria-labelledby="auth-title">
@@ -232,7 +219,11 @@ export function TrialAuth({
           {title}
         </h2>
         <p>{copy}</p>
-        {(mode === "login" || mode === "register") && (
+        <p role="status">
+          Регистрация на сайте недоступна. Сайт в разработке. Войти можно в
+          существующий аккаунт.
+        </p>
+        {mode === "login" && (
           <>
             <GoogleButton
               auth={auth}
@@ -301,10 +292,7 @@ export function TrialAuth({
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(event) => onPasswordChange(event.target.value)}
-                  autoComplete={
-                    mode === "login" ? "current-password" : "new-password"
-                  }
-                  minLength={mode === "register" ? 12 : undefined}
+                  autoComplete="current-password"
                   maxLength={128}
                   required
                   aria-invalid={attempted && !passwordValid}
@@ -325,7 +313,6 @@ export function TrialAuth({
                   )}
                 </button>
               </span>
-              {mode === "register" && <small>От 12 до 128 символов</small>}
               {attempted && !passwordValid && mode === "login" && (
                 <small className="trial-field-error">Введите пароль</small>
               )}
@@ -345,24 +332,10 @@ export function TrialAuth({
               ? "Подождите…"
               : mode === "login"
                 ? "Войти и сохранить"
-                : mode === "register"
-                  ? "Создать аккаунт"
-                  : "Подтвердить email"}
+                : "Подтвердить email"}
           </button>
         </form>
-        {mode === "login" ? (
-          <>
-            <div className="trial-divider" />
-            <button
-              type="button"
-              className="trial-secondary trial-auth-switch"
-              onClick={() => onModeChange("register")}
-              disabled={busy}
-            >
-              Создать аккаунт
-            </button>
-          </>
-        ) : (
+        {mode !== "login" && (
           <button
             type="button"
             className="trial-text-button trial-auth-switch"

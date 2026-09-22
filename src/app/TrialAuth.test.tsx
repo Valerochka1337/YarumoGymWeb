@@ -52,13 +52,21 @@ it("renders the configured Google account option and continues saving after sign
       onPasswordChange={vi.fn()}
       onCodeChange={vi.fn()}
       onLogin={vi.fn()}
-      onRegister={vi.fn()}
       onVerify={vi.fn()}
       onGoogleSuccess={onGoogleSuccess}
       onGoogleError={vi.fn()}
       onCancel={vi.fn()}
     />,
   );
+  expect(
+    screen.queryByRole("button", { name: "Создать аккаунт" }),
+  ).not.toBeInTheDocument();
+  expect(screen.getByRole("status")).toHaveTextContent(
+    "Регистрация на сайте недоступна. Сайт в разработке.",
+  );
+  expect(
+    screen.getByRole("button", { name: "Войти и сохранить" }),
+  ).toBeInTheDocument();
   fireEvent.click(
     await screen.findByRole("button", { name: "Продолжить с Google" }),
   );

@@ -47,11 +47,14 @@ export function Account({
         </p>
         {!currentSession() || owner === "guest" ? (
           <>
+            <p role="status">
+              Регистрация на сайте недоступна. Сайт в разработке. Войти можно в
+              существующий аккаунт.
+            </p>
             <GoogleSignIn signedIn={change} />
             <div className="toolbar">
               {[
                 ["login", "Вход"],
-                ["register", "Регистрация"],
                 ["password/request", "Сброс пароля"],
                 ["verify", "Подтвердить email"],
                 ["password/reset", "Новый пароль"],
@@ -90,7 +93,7 @@ export function Account({
                   required
                 />
               </Field>
-              {["login", "register", "password/reset"].includes(mode) && (
+              {["login", "password/reset"].includes(mode) && (
                 <Field label="Пароль">
                   <input
                     name="password"
